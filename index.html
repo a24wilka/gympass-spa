@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Titel som visas i webbläsarfliken -->
+  <title>Gympass App - Bokningssystem</title>
+
+  <!-- Huvudstil för sidan -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- React + Babel används för bokningshistoriken -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Extra stil för felmeddelanden och feedback -->
+  <style>
+    input:invalid:focus,
+    input.error {
+      border-color: #e74c3c !important;
+      box-shadow: 0 0 8px rgba(231, 76, 60, 0.4);
+      background-color: #fffbfa;
+    }
+
+    .feedback {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .feedback.hidden {
+      display: none;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.ok {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .feedback.err {
+      background: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Sidhuvud med titel och navigation -->
+  <header>
+    <div class="header-container">
+
+      <!-- Appens namn och kort beskrivning -->
+      <div class="brand">
+        <strong>Gympass App</strong>
+        <div class="muted">SPA för bokning, historik och interaktivitet</div>
+      </div>
+
+      <!-- Navigationsmeny mellan olika SPA-skärmar -->
+      <nav id="main-nav">
+        <a data-screen="welcome">Hem</a>
+        <a data-screen="register">Registrera deltagare</a>
+        <a data-screen="search">Sök pass</a>
+        <a data-screen="book">Boka pass</a>
+        <a data-screen="history">Mina bokningar</a>
+        <a data-screen="canvas-demo">Interaktiv Grafik</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- Huvudinnehåll: alla skärmar ligger i samma HTML-fil -->
+  <main>
+
+    <!-- Startsida / inloggning -->
+    <section id="welcome" class="screen active">
+      <h2>Välkommen!</h2>
+
+      <div id="not-logged">
+        <form id="login-form">
+          <label for="login-name">Ditt namn</label>
+          <input id="login-name" required placeholder="Ange ditt namn" />
+          <button type="submit">Logga in</button>
+        </form>
+
+        <p class="muted">Senaste sökning: <span id="last-search">-</span></p>
+      </div>
+
+      <div id="logged" style="display:none;">
+        <p>Inloggad som <strong id="user-display"></strong></p>
+        <button id="logout-btn" type="button">Logga ut</button>
+        <button id="go-mybookings" type="button">Mina bokningar</button>
+      </div>
+    </section>
+
+    <!-- Registrering av deltagare -->
+    <section id="register" class="screen">
+      <h2>Registrera ny deltagare</h2>
+
+      <h3>Registrerade deltagare</h3>
+      <ul id="registered-list"></ul>
+
+      <h3>Lägg till ny</h3>
+
+      <form id="register-form" class="register-form">
+        <div class="form-grid">
+          <input id="fname" placeholder="Förnamn" required />
+          <input id="lname" placeholder="Efternamn" required />
+
+          <input id="email" type="email" placeholder="E-post" required />
+          <input id="age" type="number" min="0" placeholder="Ålder (valfritt)" />
+
+          <textarea id="notes" placeholder="Noteringar (valfritt)" rows="3"></textarea>
+
+          <label class="newsletter-row">
+            <input id="newsletter" type="checkbox" />
+            <span>Ja, skicka nyhetsbrev</span>
+          </label>
+        </div>
+
+        <button type="submit">Skapa profil</button>
+      </form>
+
+      <div id="reg-feedback" class="feedback hidden"></div>
+    </section>
+
+    <!-- Sökning av träningspass -->
+    <section id="search" class="screen">
+      <h2>Sök pass</h2>
+
+      <form id="search-form">
+        <input id="search-term" placeholder="Sök efter pass eller instruktör…" />
+        <button type="submit">Sök</button>
+      </form>
+
+      <div id="search-results"></div>
+    </section>
+
+    <!-- Bokning av träningspass -->
+    <section id="book" class="screen">
+      <h2>Boka pass</h2>
+
+      <form id="book-form">
+        <select id="book-resource" required></select>
+        <input id="book-date" type="date" required />
+
+        <!-- Här visas visuell plats-/resursöversikt -->
+        <div id="resource-visual"></div>
+
+        <input id="book-note" placeholder="Notering (valfritt)" />
+        <button type="submit">Boka</button>
+      </form>
+
+      <div id="book-feedback" class="feedback hidden"></div>
+    </section>
+
+    <!-- Bokningshistorik, renderas med React -->
+    <section id="history" class="screen">
+      <h2>Mina bokningar</h2>
+      <div id="history-root"></div>
+    </section>
+
+    <!-- Interaktiv canvas-grafik -->
+    <section id="canvas-demo" class="screen">
+      <h2>Interaktiv Grafik</h2>
+
+      <canvas id="main-canvas" width="500" height="300"></canvas>
+
+      <p class="muted">Klicka på den roterande amöban!</p>
+    </section>
+
+  </main>
+
+  <!-- React-komponent skriven med JSX och Babel -->
+  <script type="text/babel">
+    function HistoryApp({ bookings, onDelete }) {
+      return (
+        <div className="history-wrapper">
+          {bookings.length === 0 ? (
+            <p className="muted">Inga bokningar än.</p>
+          ) : (
+            <table className="history-table">
+              <thead>
+                <tr>
+                  <th>Pass</th>
+                  <th>Datum</th>
+                  <th>Plats</th>
+                  <th>Notering</th>
+                  <th>Radera</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {bookings.map((b, i) => (
+                  <tr key={i}>
+                    <td>{b.resourceId}</td>
+                    <td>{b.date}</td>
+                    <td>{b.seat}</td>
+                    <td>{b.note || "–"}</td>
+                    <td>
+                      <button type="button" onClick={() => onDelete(i)}>
+                        Radera
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      );
+    }
+
+    window.HistoryApp = HistoryApp;
+  </script>
+
+  <!-- Huvudlogik för SPA, API-anrop, bokning och canvas -->
+  <script type="module" src="app.js"></script>
+
+</body>
+</html>

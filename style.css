@@ -1,0 +1,245 @@
+:root {
+  --accent: #143261;
+  --muted: #504a4a;
+  --bg: #080808;
+  --card: #757597bd;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  margin: 0;
+  color: #222;
+  background: url('Gym123.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+header {
+  background: linear-gradient(90deg, var(--accent), #5fb0ff);
+  color: #fff;
+  padding: 1rem;
+}
+
+main {
+  padding: 1rem;
+  max-width: 1100px;
+  margin: 1rem auto;
+  position: relative;
+  min-height: 70vh;
+}
+
+nav a {
+  color: #fff;
+  margin-right: 1rem;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   Screens
+========================= */
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(30px);
+  transition: opacity 0.55s ease, transform 0.55s ease, visibility 0.55s;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.screen.active {
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+  z-index: 10;
+}
+
+/* =========================
+   Forms (global)
+========================= */
+input,
+textarea,
+select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 0;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #1a6bff;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* =========================
+   REGISTER – FIXAD LAYOUT
+========================= */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  max-width: 520px;
+  margin: 0 auto 1rem auto;
+}
+
+.form-grid textarea {
+  grid-column: 1 / -1;
+}
+
+.newsletter-row {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#registered-list button {
+  background: #ff4d4f;
+  color: #fff;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  margin-left: 0.5rem;
+}
+
+/* =========================
+   SEARCH / TABLES
+========================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th,
+td {
+  padding: 0.6rem;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+th {
+  background: #f6f9ff;
+}
+
+/* =========================
+   BOOKING – 
+========================= */
+#resource-visual {
+  display: grid;
+  grid-template-columns: repeat(6, 36px);
+  gap: 8px;
+  margin: 1rem auto;
+  width: fit-content;
+}
+
+.seat {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  text-align: center;
+  cursor: pointer;
+  background: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.seat:hover:not(.taken) {
+  transform: scale(1.08);
+}
+
+.seat.taken {
+  background: #f8d7da;
+  color: #900;
+  cursor: not-allowed;
+}
+
+.seat.selected {
+  background: #d4edff;
+  border-color: var(--accent);
+}
+
+/* =========================
+   FEEDBACK
+========================= */
+.feedback {
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-top: 0.75rem;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: 0.4s;
+}
+
+.feedback.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.feedback.ok {
+  background: #e6ffec;
+  color: #056b1a;
+}
+
+.feedback.err {
+  background: #fff0f0;
+  color: #a00;
+}
+
+/* =========================
+   CANVAS
+========================= */
+#main-canvas {
+  display: block;
+  margin: 1rem 0;
+  background: #b57f7f;
+  border-radius: 8px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #resource-visual {
+    grid-template-columns: repeat(4, 36px);
+  }
+}
