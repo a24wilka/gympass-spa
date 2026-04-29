@@ -1,4 +1,4 @@
-# 💪 Gympass SPA Booking App
+#  Gympass SPA Booking App
 
 A Single Page Application (SPA) for booking gym classes, built with **HTML, CSS, JavaScript and React**.
 
