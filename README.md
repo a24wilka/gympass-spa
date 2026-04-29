@@ -33,20 +33,17 @@ The application allows users to search, book and manage gym sessions in a dynami
 ## 📸 Screenshots
 
 ### Dashboard / Overview
-
-![Overview](Images/Gym123.png)
+![Overview](images/Gym123.png)
 
 ### Search Gym Classes
-
-![Search](Images/gym-search.png)
+![Search](images/gym-search.png)
 
 ### Booking System
-
-![Booking](Images/gym-booking.png)
+![Booking](images/gym-booking.png)
 
 ### Booking History
+![History](images/gym-history.png)
 
-![History](Images/gym-history.png)
 
 ---
 
